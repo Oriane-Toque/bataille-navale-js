@@ -20,7 +20,8 @@ const app =
     // pour écouter l'évènement "le formulaire est soumis"
     // on récupère l'élément <form id="attackForm">
     const formElement = document.querySelector('#attackForm');
-
+    // je sélectionne mon select grace au DOM
+    const options = document.getElementById('theme');
     // Puis, sur cet élément, on écoute l'event "submit"
     // et si l'évènement survient, la fonction "handleSubmitAttackForm" sera automatiquement appelée par JS
     formElement.addEventListener( 'submit', app.handleSubmitAttackForm );
@@ -31,12 +32,37 @@ const app =
     // On écoute l'event "click" sur le bouton des actions à afficher/cacher
     document.querySelector('#toggle-actions').addEventListener( 'click', app.handleActionsToggle );
 
+    // je récupère chacune de mes options
+    // et je leur ajoute un écouteur d'évènement
+    options.addEventListener('change', app.handleGetTemplate);
+    // j'ajoute un écouteur d'évènement
+
     // Et enfin, on affiche la grille
     // grid.display();
 
     // Désormais, on affiche un form, puis on lance le jeu
     // document.querySelector('#beforegame .form').addEventListener('submit', app.handleNewGame);
     app.handleNewGame();
+  },
+
+  handleLoadTemplate : function()
+  {
+    const themeCookie = document.cookie.split('=');
+    const isCookie = document.cookie.indexOf( "Theme=" );
+    if( isCookie >= 0){
+      document.body.className = themeCookie[1];
+    }
+  },
+
+  handleGetTemplate : function()
+  {
+    // assignation value du select à la class de body
+    const theme = document.querySelector('#theme').value;
+    document.body.className = theme;
+
+    // création d'un cookie
+    document.cookie = 'Theme=' + theme;
+    console.log(document.cookie);
   },
 
   // La fonction "handler" qui sera exécutée à la soumission du formulaire
@@ -103,3 +129,4 @@ const app =
 // On lance la fonction app.init une fois la page chargée
 // Cela évite de bloquer l'affichage de la page
 document.addEventListener('DOMContentLoaded', app.init);
+document.addEventListener('DOMContentLoaded', app.handleLoadTemplate);

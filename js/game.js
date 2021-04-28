@@ -48,42 +48,6 @@ const game =
       // et donc, pour chaque case de ma grille
       cells[index].addEventListener( "click", game.handleClickOnCell );
     }
-
-    // je sélectionne mon select grace au DOM
-    const options = document.getElementById('theme');
-
-    // je récupère chacune de mes options
-    // et je leur ajoute un écouteur d'évènement
-    options.addEventListener('click', game.handleGetTemplate);
-  },
-
-  handleGetTemplate : function( evt )
-  {
-    const selectedOption = evt.currentTarget.value;
-
-    // à chaque changement de thème, on reset la class
-    // permet d'éviter une accumulation de class
-    // et de ne plus avoir accès aux autres thèmes
-    document.body.className = '';
-
-    switch (selectedOption)
-    {
-      case 'Default':
-        document.body.className = '';
-        break;
-      case 'Licorn':
-        document.body.classList.add('f0f');
-        break;
-      case 'Black & White':
-        document.body.classList.add('black-and-white');
-        break;
-      case 'Matrix':
-        document.body.classList.add('terminal');
-        break;
-      case 'Dark':
-        document.body.classList.add('dark');
-        break;
-    }
   },
 
   handleClickOnCell : function( evt )
