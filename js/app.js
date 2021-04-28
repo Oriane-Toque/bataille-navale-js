@@ -1,76 +1,105 @@
-// On enregistre une grille :
-// dans un array qui représente la grille, on enregistre 8 lignes
-// chaque ligne contient 8 emplacements
-let grid = [
-    ['b', '', '', '', '', '', '', ''],
-    ['b', '', '', '', 'b', 'b', 'b', ''],
-    ['', '', '', '', '', '', '', ''],
-    ['', 'b', '', '', '', '', '', ''],
-    ['', 'b', '', 'b', 'b', 'b', 'b', 'b'],
-    ['', 'b', '', '', '', '', '', ''],
-    ['', '', '', '', '', '', '', ''],
-    ['', '', '', '', 'b', 'b', '', '']
-];
+/*
 
-// afficher la grille de jeu
-function displayGrid() {
-    // on affiche l'entête des colonnes 
-    console.log('  A B C D E F G H');
-    // pour chaque ligne de la grille
-    for (let rowIndex = 0; rowIndex < 8; rowIndex++) {
-        // avant d'afficher le CONTENU de la ligne
-        // on affiche son numéro
-        // @TODO
+Le module principal "app" de notre application
 
-        // afficher la ligne => utiliser displayLine()
-        displayLine(grid[rowIndex]);
-    }
-}
+Pour l'instant, en JS, on ne peut pas charger d'autres fichiers JS nativement
+Donc, on ajoute une balise <script> pour chaque fichier dans le code HTML
+(plus tard, avec RequireJS ou Browserify, vous pourrait faire des "require" en JS ;) )
 
-// displayLine() va servir à afficher la ligne fournie en paramètre dans la console
-// on veut afficher chaque ligne avec une largeur identique
-// on va donc remplacer chaque emplacement vide par une ~ (=> seulement pour l'affichage, on ne modifie pas la ligne elle-même)
-function displayLine(row) {
-    // on déclare une string à afficher
-    let lineToDisplay = "";
-    // obtenir une string (notre ligne) dans laquelle les chaînes vides sont remplacées par des ~
+Dans ce module "app", on va placer tous les écouteurs d'évènements (dans init)
+Puis, on peut (et on a choisi de le faire ici) placer toutes les fonctions "handler" de ces évènements
+! Attention, les fonctiosns ont attachées à leur module => app.laFonction();
 
-    // pour chaque caractère dans la ligne
-    for (let columnIndex = 0; columnIndex < 8; columnIndex++) {   
-        // si le caractère est une chaîne vide
-        // on ajoute un ~ à la ligne à afficher
-        // si le caractère trouvé à l'index de grid qui correspond au tour de boucle courant est une chaîne vide
-        if (row[columnIndex] === '') {
-            // on ajoute ~ à la string à afficher
-            lineToDisplay += '~ ';
-        } else {
-            // dans tous les autres cas, on ajoute le caractère lui même (si cette emplacement de la grille vaut b ou p ou t)
-            lineToDisplay += row[columnIndex] + ' ';
-        }
-    }
+*/
 
-    // finalité : 
-    // afficher la ligne dans la console.
-    console.log(lineToDisplay);
-}
-
-// Cette fonction détermine si on touche un bateau à l'index columnIndex lorsqu'on lance un missile
-function sendMissileAt(rowIndex, columnIndex)
+const app = 
 {
-    // est-ce que l'index columnIndex 
-    // du tableau contenu à l'index rowIndex
-    // de grid contient un b ?
-    if (grid[rowIndex][columnIndex] === 'b') {
-        console.log("Touché !");
-        // on a touché un b => on doit le transformer en t
-        // on utilise les mêmes index de grid mais on utilise = pour affecter (changer) la valeur
-        grid[rowIndex][columnIndex] = 't';
-        return true;
+  init: function() 
+  {
+    // On ajoute les écouteurs d'évènement
+    // pour écouter l'évènement "le formulaire est soumis"
+    // on récupère l'élément <form id="attackForm">
+    const formElement = document.querySelector('#attackForm');
+
+    // Puis, sur cet élément, on écoute l'event "submit"
+    // et si l'évènement survient, la fonction "handleSubmitAttackForm" sera automatiquement appelée par JS
+    formElement.addEventListener( 'submit', app.handleSubmitAttackForm );
+
+    // On écoute l'event "click" sur le bouton des stats
+    document.querySelector('#stats').addEventListener( 'click', app.handleStatsClick );
+
+    // On écoute l'event "click" sur le bouton des actions à afficher/cacher
+    document.querySelector('#toggle-actions').addEventListener( 'click', app.handleActionsToggle );
+
+    // Et enfin, on affiche la grille
+    // grid.display();
+
+    // Désormais, on affiche un form, puis on lance le jeu
+    // document.querySelector('#beforegame .form').addEventListener('submit', app.handleNewGame);
+    app.handleNewGame();
+  },
+
+  // La fonction "handler" qui sera exécutée à la soumission du formulaire
+  // evt contient toujours les données de l'évènement dans une fonction "handler"
+  handleSubmitAttackForm: function(evt) 
+  {
+    console.log('form submitted');
+
+    // On bloque l'envoi du formulaire (fonctionnement par défaut)
+    evt.preventDefault();
+
+    // On récupère le formulaire qui vient d'être soumis (l'élément sur lequel l'event a eu lieu)
+    const formElement = evt.currentTarget; // .currentTarget contient toujours l'élément sur lequel on a attaché l'event/handler (dans init)
+
+    // On récupère l'élément 'l'input
+    const inputElement = formElement.querySelector('input');
+
+    // On récupère la valeur saisie dans l'input
+    const inputValue = inputElement.value; // attribut "value" de l'élément
+
+    // On vérifie la saisie avant d'envoyer le missile
+    if (grid.checkCellName(inputValue)) {
+      // On envoie un missile à la case saisie
+      game.sendMissile(inputValue);
     } else {
-        // sinon
-        console.log("Dans l'eau !");
-        // on modifie la case touchée pour faire apparaître le "plouf"
-        grid[rowIndex][columnIndex] = 'p';
-        return false;
+      // Grosse alerte moche à l'écran
+      alert('Case incorrecte');
     }
-}
+    // On vide l'input
+    inputElement.value = ''; // on accède aussi en écriture aux attributs d'un élément
+  },
+
+  handleStatsClick: function(evt) 
+  {
+    stats.displayStats();
+  },
+
+  handleActionsToggle: function(evt) 
+  {
+    // On récupère la div actions
+    const actionsHistoryElement = document.querySelector('#actions');
+
+    // Si la div est cachée (none ou vide au départ, car uniquement en CSS)
+    if (actionsHistoryElement.style.display === 'none' || actionsHistoryElement.style.display === '') {
+      // alors on affiche
+      actionsHistoryElement.style.display = 'block';
+    } else {
+      console.log(actionsHistoryElement.style.display);
+      // Sinon, on cache
+      actionsHistoryElement.style.display = 'none';
+    }
+  },
+
+  handleNewGame: function() 
+  {
+    // On initialise le jeu
+    // - tour n°1
+    // - création de la grille
+    // - affichage de la grille
+    game.init();
+  }
+};
+
+// On lance la fonction app.init une fois la page chargée
+// Cela évite de bloquer l'affichage de la page
+document.addEventListener('DOMContentLoaded', app.init);
