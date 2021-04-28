@@ -95,6 +95,20 @@ header.cell {
 }
 
 /* themes */
+#themes {
+    margin-top: 1.5rem;
+}
+
+label {
+    color: var(--color-one);
+    padding-right: 0.5rem;
+    font-weight: bold;
+}
+
+select {
+    padding: 0.5rem 1rem 0.5rem 1rem;
+}
+
 body.f0f {
     --color-one: #ff00ff;
     --color-two: #00ffff;
