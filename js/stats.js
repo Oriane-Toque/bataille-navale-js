@@ -55,7 +55,7 @@ const stats =
 
   displayStats: function() 
   {
-    const shotsFired = game.turn - 1;
+    const shotsFired = game.turn;
 
     // On va récupérer TOUTES les cases avec la classe .hit
     // Pour ça, on utilise querySelectorAll

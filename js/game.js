@@ -14,7 +14,7 @@ const game =
   init: function()   
   {
     // Dans cette fonction, on s'assure que nos variables ont bien leur valeur initiale
-    game.turn = 1;
+    game.turn = 0;
 
     // On initialise le tableau de la grille (en passant par le module grid)
     grid.cells = [
@@ -72,7 +72,7 @@ const game =
     // On change son contenu text
     // turnSpan.textContent = turn;
     // Et on peut même le faire en une seule instruction (avec du chaînage)
-    document.querySelector('h3').textContent = game.turn;
+    document.querySelector('h3').textContent = 'Tour ' + game.turn;
 
     // Après avoir incrémenté le nombre de tour passés
     // Je vais vérifier s'il reste des bateaux a couler

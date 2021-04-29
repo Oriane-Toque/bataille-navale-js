@@ -14,7 +14,7 @@
 
     <div id="game">
 
-        <h3>Tour 1</h3>
+        <h3>Tour 0</h3>
 
         <!-- Ici on a géré les missiles au clic, donc on masque le form en CSS-->
         <form id="attackForm" class="form" style="display: none;">
@@ -24,25 +24,28 @@
         </form>
 
         <div id="grid"></div>
-
-        <div>
-            <button id="stats">Voir les statistiques</button>
-            <button id="toggle-actions">Afficher/Cacher l'historique</button>
-        </div>
-
-        <div id="actions">
-
-        </div>
+        
         <div id="themes">
             <label for="theme">Choisis ton thème</label>
             <select name="themes" id="theme">
-                <option selected>Default</option>
+                <option>choose ----</option>
+                <option value = "default">Default</option>
                 <option value = "f0f">Licorn</option>
                 <option value = "black-and-white">Black &amp; White</option>
                 <option value = "terminal">Matrix</option>
                 <option value = "dark">Dark</option>
             </select>
         </div>
+        <div>
+            <button id="stats">Voir les statistiques</button>
+            <button id="toggle-actions">Afficher/Cacher l'historique</button>
+            <button id="new-game">Rejouer</button>
+        </div>
+
+        <div id="actions">
+
+        </div>
+        
     </div>
     
     <script src="js/grid.js"></script>

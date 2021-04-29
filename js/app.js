@@ -14,16 +14,21 @@ Puis, on peut (et on a choisi de le faire ici) placer toutes les fonctions "hand
 
 const app = 
 {
+  themes: ['f0f', 'black-and-white', 'terminal', 'dark'],
+
   init: function() 
   {
+    
     // On ajoute les écouteurs d'évènement
     // pour écouter l'évènement "le formulaire est soumis"
     // on récupère l'élément <form id="attackForm">
     const formElement = document.querySelector('#attackForm');
     // je sélectionne mon select grace au DOM
     const options = document.getElementById('theme');
+    const newGame = document.getElementById('new-game');
     // Puis, sur cet élément, on écoute l'event "submit"
     // et si l'évènement survient, la fonction "handleSubmitAttackForm" sera automatiquement appelée par JS
+    
     formElement.addEventListener( 'submit', app.handleSubmitAttackForm );
 
     // On écoute l'event "click" sur le bouton des stats
@@ -35,7 +40,8 @@ const app =
     // je récupère chacune de mes options
     // et je leur ajoute un écouteur d'évènement
     options.addEventListener('change', app.handleGetTemplate);
-    // j'ajoute un écouteur d'évènement
+
+    newGame.addEventListener('click', app.handleReloadGame);
 
     // Et enfin, on affiche la grille
     // grid.display();
@@ -43,6 +49,11 @@ const app =
     // Désormais, on affiche un form, puis on lance le jeu
     // document.querySelector('#beforegame .form').addEventListener('submit', app.handleNewGame);
     app.handleNewGame();
+  },
+
+  handleReloadGame : function()
+  {
+    document.location.reload();
   },
 
   handleLoadTemplate : function()
@@ -58,11 +69,17 @@ const app =
   {
     // assignation value du select à la class de body
     const theme = document.querySelector('#theme').value;
-    document.body.className = theme;
+
+    // réinitialisation
+    for (const currentTheme of app.themes)
+    {
+      document.body.classList.remove(currentTheme);
+    }
+
+    document.body.classList.add(theme);
 
     // création d'un cookie
     document.cookie = 'Theme=' + theme;
-    console.log(document.cookie);
   },
 
   // La fonction "handler" qui sera exécutée à la soumission du formulaire
